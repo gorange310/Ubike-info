@@ -21,3 +21,37 @@
     </ul>
   </nav>
 </template>
+
+<script>
+import store from '../store';
+
+export default {
+  computed: {
+    pagerEnd() { return store.getters.pagerEnd },
+    pagerAddAmount() {
+      return store.getters.pagerAddAmount
+    },
+    currentPage: {
+      get() {
+        return store.state.currentPage
+      },
+      set(val) {
+        store.commit('setCurrentPage', val);
+      }
+    }
+  },
+  methods: {
+    setPage(page) {
+      // 設定目前頁數
+      if (page < 1 || page > this.totalPageCount) {
+        return;
+      }
+      this.currentPage = page;
+    },
+  },
+
+}
+</script>
+
+<style>
+</style>
