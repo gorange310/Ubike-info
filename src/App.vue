@@ -2,96 +2,31 @@
   <div>
     <h1>YouBike 臺北市公共自行車即時資訊</h1>
 
-    <div id="app">
-      <!-- 搜尋框 -->
-      <p>
-        站點名稱搜尋:
-        <input type="text" v-model="searchText" />
-      </p>
+    <!-- 搜尋框 -->
+    <search></search>
+    <!-- 表格 -->
+    <ubike-table></ubike-table>
+    <!-- 頁籤 -->
+    <pagination></pagination>
 
-      <!-- 表格 -->
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th @click="setSort('sno')">
-              #
-              <span v-show="currentSort === 'sno'">
-                <i
-                  class="fa"
-                  :class="isSortDesc ? 'fa-sort-desc' : 'fa-sort-asc'"
-                  aria-hidden="true"
-                ></i>
-              </span>
-            </th>
-            <th>場站名稱</th>
-            <th>場站區域</th>
-            <th @click="setSort('sbi')" class="pointer">
-              目前可用車輛
-              <span v-show="currentSort === 'sbi'">
-                <i
-                  class="fa"
-                  :class="isSortDesc ? 'fa-sort-desc' : 'fa-sort-asc'"
-                  aria-hidden="true"
-                ></i>
-              </span>
-            </th>
-            <th @click="setSort('tot')" class="pointer">
-              總停車格
-              <span v-show="currentSort === 'tot'">
-                <i
-                  class="fa"
-                  :class="isSortDesc ? 'fa-sort-desc' : 'fa-sort-asc'"
-                  aria-hidden="true"
-                ></i>
-              </span>
-            </th>
-            <th>資料更新時間</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="s in slicedUbikeStops" :key="s.sno">
-            <td>{{ s.sno }}</td>
-            <td>{{ s.sna }}</td>
-            <td>{{ s.sarea }}</td>
-            <td>{{ s.sbi }}</td>
-            <td>{{ s.tot }}</td>
-            <td>{{ timeFormat(s.mday) }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- 頁籤 -->
-      <nav v-if="pagerEnd > 0">
-        <ul class="pagination">
-          <li @click.prevent="setPage(currentPage - 1)" class="page-item">
-            <a class="page-link" href>Previous</a>
-          </li>
-
-          <li
-            v-for="i in pagerEnd"
-            :class="{ active: i + pagerAddAmount === currentPage }"
-            :key="i"
-            @click.prevent="setPage(i + pagerAddAmount)"
-            class="page-item"
-          >
-            <a class="page-link" href>{{ i + pagerAddAmount }}</a>
-          </li>
-
-          <li @click.prevent="setPage(currentPage + 1)" class="page-item">
-            <a class="page-link" href>Next</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
   </div>
 </template>
 
 <script>
+import Search from './components/Search.vue';
+import UbikeTable from './components/UbikeTable.vue';
+import Pagination from './components/Pagination.vue';
+
 // 單頁顯示筆數
 const COUNT_OF_PAGE = 10;
 // 頁碼最大數量
 const PAGINATION_MAX = 10;
 export default {
+  components: {
+    Search,
+    UbikeTable,
+    Pagination
+  },
   data() {
     return {
       currentSort: "sno",
