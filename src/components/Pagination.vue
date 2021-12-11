@@ -24,32 +24,37 @@
 
 <script>
 import store from '../store';
+import { computed, ref } from 'vue';
 
 export default {
-  computed: {
-    pagerEnd() { return store.getters.pagerEnd },
-    pagerAddAmount() {
-      return store.getters.pagerAddAmount
-    },
-    currentPage: {
-      get() {
-        return store.state.currentPage
-      },
-      set(val) {
-        store.commit('setCurrentPage', val);
-      }
-    }
-  },
-  methods: {
-    setPage(page) {
+  // methods: {
+
+  // },
+  setup() {
+    const pagerEnd = computed(() => store.getters.pagerEnd);
+    const pagerAddAmount = computed(() => store.getters.pagerAddAmount);
+    const currentPage = computed({
+      get: () => store.state.currentPage,
+      set: val => store.commit('setCurrentPage', val)
+    });
+    const totalPageCount = computed(() => store.getters.totalPageCount);
+
+    const setPage = (page) => {
       // 設定目前頁數
-      if (page < 1 || page > this.totalPageCount) {
+      if (page < 1 || page > totalPageCount.value) {
         return;
       }
-      this.currentPage = page;
-    },
-  },
+      currentPage.value = page;
+    };
 
+
+    return {
+      pagerEnd,
+      pagerAddAmount,
+      currentPage,
+      setPage
+    }
+  }
 }
 </script>
 

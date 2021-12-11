@@ -26,7 +26,7 @@ export default {
     UbikeTable,
     Pagination
   },
-  created() {
+  setup() {
     store.dispatch('fetchUbike');
   }
 }

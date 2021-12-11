@@ -40,52 +40,55 @@
 
 <script>
 import store from '../store';
+import { computed, watch } from 'vue';
 
 export default {
-  computed: {
-    ubikeStops() {
-      return store.state.ubikeStops;
-    },
-    isSortDesc: {
-      get() { return store.state.isSortDesc; },
-      set(val) {
+  setup() {
+    const ubikeStops = computed(() => store.state.ubikeStops);
+    const isSortDesc = computed({
+      get: () => { return store.state.isSortDesc; },
+      set: (val) => {
         store.commit('setIsSortDesc', val);
       }
-    },
-    currentSort: {
+    });
+    const currentSort = computed({
       get() { return store.state.currentSort; },
       set(val) {
         store.commit('setCurrentSort', val);
       }
-    },
-    slicedUbikeStops() {
-      return store.getters.slicedUbikeStops;
-    },
-    sortedUbikeStops() {
-      return store.getters.sortedUbikeStops;
-    }
-  },
-  methods: {
-    timeFormat(val) {
+    });
+    const slicedUbikeStops = computed(() => store.getters.slicedUbikeStops);
+    const sortedUbikeStops = computed(() => store.getters.sortedUbikeStops);
+
+    const timeFormat = (val) => {
       // 時間格式
       const pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
       return val.replace(pattern, "$1/$2/$3 $4:$5:$6");
-    },
-    setSort(sortType) {
+    };
+
+    const setSort = (sortType) => {
       // 切換排序
-      if (sortType === this.currentSort) {
-        this.isSortDesc = !this.isSortDesc;
+      if (sortType === currentSort.value) {
+        isSortDesc.value = !isSortDesc.value;
       } else {
-        this.currentSort = sortType;
-        this.isSortDesc = false;
+        currentSort.value = sortType;
+        isSortDesc.value = false;
       }
-    }
-  },
-  watch: {
-    sortedUbikeStops() {
+    };
+
+    watch(() => sortedUbikeStops.value, (val, oldVal) => {
       // 當搜尋條件、排序變更時，強制切到第一頁
-      // this.setPage(1);
       store.commit('setCurrentPage', 1);
+    });
+
+    return {
+      ubikeStops,
+      isSortDesc,
+      currentSort,
+      slicedUbikeStops,
+      sortedUbikeStops,
+      timeFormat,
+      setSort
     }
   },
 }

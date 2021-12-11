@@ -7,16 +7,17 @@
 
 <script>
 import store from '../store.js'
+import { computed } from 'vue';
 
 export default {
-  computed: {
-    searchText: {
-      get() {
-        return store.state.searchText;
-      },
-      set(val) {
-        store.commit('setSearchText', val);
-      }
+  setup() {
+    const searchText = computed({
+      get: () => store.state.searchText,
+      set: val => store.commit('setSearchText', val)
+    });
+
+    return {
+      searchText
     }
   }
 }
